@@ -1,0 +1,54 @@
+#include <iostream>
+#include "Header.h"
+#include <ctime>
+using namespace std;
+
+void arrayInputUser(int* array, int length);
+void arrayInputRandom(int* array, int length);
+int getArrayInput(int* array, int length, int input)
+{
+	if (input)
+	{
+		arrayInputUser(array, length);
+	}
+	else
+	{
+		arrayInputRandom(array, length);
+	}
+	return 0;
+}
+void printArray(int* array, int length)
+{
+	for (int i = 0; i < length; ++i)
+	{
+		cout << array[i] << " ";
+	}
+}
+void delArray(int* array, int &length,int arrayPos)
+{
+	for (int i = arrayPos + 1; i < length; i++)
+	{
+		array[i - 1] = array[i];
+		--length;
+	}
+}
+int main()
+{
+	srand(static_cast<int>(time(0)));
+	rand();
+	setlocale(LC_ALL, "rus");
+	cout << "\t\t\t\t\tДобро пожаловать!\n************************************************************************************************************************\n\nОпределите длину массива:";
+	int arraySize;
+	cin >> arraySize;
+	int* array = { new int[arraySize] };
+	cout << "\nЗаполнить массив 1 - самому,0 - рандомно:";
+	short arrayInput;
+	cin >> arrayInput;
+	getArrayInput(array, arraySize, arrayInput);
+	printArray(array, arraySize);
+	cout << "\nУдалить элемент массива по индексу";
+	cin >> arrayInput;
+	delArray(array, arraySize, arrayInput);
+	printArray(array, arraySize);
+	delete[] array;
+}
