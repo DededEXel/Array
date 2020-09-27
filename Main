@@ -1,54 +1,54 @@
-#include <iostream>
 #include "Header.h"
-#include <ctime>
-using namespace std;
 
 void arrayInputUser(int* array, int length);
 void arrayInputRandom(int* array, int length);
-int getArrayInput(int* array, int length, int input)
+void getFuncFromUser(int* array, int length, int item);
+void arrayInput(int* array, int& length)
 {
-	if (input)
+	cout << "\nЗначение:"; int indexArray; cin >> indexArray; cout << " \nПозиции:"; int value; cin >> value;
+	array[indexArray - 1] = value;
+	
+}
+bool programmClose()
+{
+	char ask;
+	do
 	{
-		arrayInputUser(array, length);
+		cout << "\nХотите продолжить y - Yes,n - No:";
+		cin >> ask;
+	} while (ask != 'y' && ask != 'n');
+	if (ask == 'y')
+	{
+		system("cls");
+		return true;
 	}
 	else
 	{
-		arrayInputRandom(array, length);
-	}
-	return 0;
-}
-void printArray(int* array, int length)
-{
-	for (int i = 0; i < length; ++i)
-	{
-		cout << array[i] << " ";
-	}
-}
-void delArray(int* array, int &length,int arrayPos)
-{
-	for (int i = arrayPos + 1; i < length; i++)
-	{
-		array[i - 1] = array[i];
-		--length;
+		system("cls");
+		return false;
 	}
 }
 int main()
 {
-	srand(static_cast<int>(time(0)));
-	rand();
 	setlocale(LC_ALL, "rus");
-	cout << "\t\t\t\t\tДобро пожаловать!\n************************************************************************************************************************\n\nОпределите длину массива:";
-	int arraySize;
-	cin >> arraySize;
-	int* array = { new int[arraySize] };
-	cout << "\nЗаполнить массив 1 - самому,0 - рандомно:";
-	short arrayInput;
-	cin >> arrayInput;
-	getArrayInput(array, arraySize, arrayInput);
-	printArray(array, arraySize);
-	cout << "\nУдалить элемент массива по индексу";
-	cin >> arrayInput;
-	delArray(array, arraySize, arrayInput);
-	printArray(array, arraySize);
-	delete[] array;
+	cout << "\t\t\t\t\tДобро пожаловать!\n************************************************************************************************************************\n\n";
+	do
+	{
+		srand(static_cast<int>(time(0)));
+		rand();
+		cout<<"0#Определите длину массива:"; int arraySize; cin >> arraySize; // Количество эл в массиве
+		int* array = { new int[arraySize] }; // Создали новый дин масси
+		getArrayInput(array, arraySize); // Заполняем наш массивв
+		cout << "\n1#Вывод массива.";
+		getFuncFromUser(array, arraySize, 1);
+		cout << "\n2#Линейный поиск \n· Найти индекс первого вхождения заданного значения в массиве.\n· Найти количество вхождений заданного значения в массиве(поиск всех вхождений)";
+		getFuncFromUser(array, arraySize, 2);
+		cout << "\n3#Удалить значение из заданной позиции.";
+		getFuncFromUser(array, arraySize, 3);
+		cout << "\n4#Удалить все значения равные заданному значению, сохраняя порядок следования элементов.";
+		cout << "\n5#Сортировка массива.";
+		getFuncFromUser(array, arraySize, 4);
+		delete[] array;
+	} while (programmClose());
+	system("pause");
 }
