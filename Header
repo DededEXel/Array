@@ -1,5 +1,8 @@
-pragma once
+#pragma once
 #include <cstdlib>
+#include <algorithm>
+#include <ctime>
+#include <iostream>
 
 using namespace std;
 
@@ -8,7 +11,16 @@ int getRandomNumber(int min, int max)
     static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
     return static_cast<int>(rand() * fraction * (max - min + 1) + min);
 }
-
+bool checkInputFail(int& value)
+{
+	if (std::cin.fail())
+	{
+		std::cin.clear();
+		std::cin.ignore(32767, '\n');
+		return false;
+	}
+	return true;
+}
 void arrayInputRandom(int* array, int length)
 {
     for (int inputRand = 0; inputRand < length; ++inputRand)
@@ -22,5 +34,164 @@ void arrayInputUser(int* array, int length)
     {
         cout << "Значение " << inputNum + 1 << "-го элемента:";
         cin >> array[inputNum];
+		if (!checkInputFail(inputNum))
+		{
+			system("cls");
+			exit(1);
+		}
     }
+}
+void getArrayInput(int* array, int length)
+{
+	cout << "\nЗаполнить массив 1 - самому,0 - рандомно:"; short arrayInput; cin >> arrayInput;
+	// На прошлой строчке инициализировали каждый элемент массива
+	if (arrayInput == 1)
+		arrayInputUser(array, length);
+	if (arrayInput == 0)
+		arrayInputRandom(array, length);
+
+}
+void printArray(int* array, int length)
+{
+	for (int i = 0; i < length; ++i)
+	{
+		cout << array[i] << " ";
+	}
+}
+void delArrayIndex(int* array, int& length, int arrayPos)
+{
+	if (arrayPos >= length)
+	{
+		system("cls");
+		exit(1);
+	}
+	for (int indexDel = arrayPos + 1; indexDel < length; ++indexDel)
+	{
+		array[indexDel - 1] = array[indexDel];
+		--length;
+	}
+}
+void foundArrayInputPos(int* array, int length)
+{
+	int repeatPoss = 0;
+	for (int found = 0; found < length; ++found)
+	{
+		if (*array == array[found])
+		{
+			++repeatPoss;
+		}
+	}
+	cout << "Количество повторений \"" << *array << " \"- " << repeatPoss << '\n';
+}
+void foundArrayPosRepeat(int* array, int length, int posValue)
+{
+	int repeat = 0;
+	for (int found = 0; found < length; ++found)
+	{
+		if (posValue == array[found])
+		{
+			++repeat;
+		}
+	}
+	cout << "\nКоличество повторений \"" << posValue << " \"- " << repeat << '\n';
+}
+void delArrayValue(int* array, int& length, int value)
+{
+	for (int indexDel = 0; indexDel < length; ++indexDel)
+	{
+		if (array[indexDel] == value)
+		{
+			delArrayIndex(array, length, indexDel);
+		}
+	}
+}
+void sortBiggest(int* array, int length)
+{
+	for (int iter = 1; iter < length; ++iter)
+	{
+		for (int innerFor = 0; innerFor < length - iter; innerFor++)
+		{
+			if (array[innerFor] < array[innerFor + 1])
+			{
+				swap(array[innerFor], array[innerFor + 1]);
+			}
+		}
+	}
+}
+void getFuncFromUser(int* array, int length, int item)
+{
+	switch (item)
+	{
+	case 1:
+		cout << "\nВведите 1 чтобы пропустить:"; short exitFromUser; cin >> exitFromUser;
+		if (exitFromUser == 1)
+			break;
+		printArray(array, length);
+		break;
+	case 2:
+		cout << "\nВведите 1 чтобы пропустить:"; cin >> exitFromUser;
+		if (exitFromUser == 1)
+			break;
+		cout << "\nВыберите - (1)Найти индекс первого вхождения заданного значения в массиве.\n· (2)Найти количество вхождений заданного значения в массиве(поиск всех вхождений):"; short change; cin >> change;
+		switch (change)
+		{
+		case 1:
+			foundArrayInputPos(array, length);
+			break;
+		case 2:
+			cout << "\nВведите 1 чтобы пропустить:"; cin >> exitFromUser;
+			if (exitFromUser == 1)
+				break;
+			cout << "\nВведите значение для поиска:"; int found; cin >> found;
+			if (!checkInputFail(found))
+			{
+				system("cls");
+				exit(1);
+			}
+			foundArrayPosRepeat(array, length, found);
+			break;
+		default:
+			system("cls");
+			exit(1);
+		}
+	case 3:
+		cout << "\nВведите 1 чтобы пропустить:"; cin >> exitFromUser;
+		if (exitFromUser == 1)
+			break;
+		cout << "\nВведите 1 - удалить по индексу. 2 - удалить все значения равные заданому:"; short massDel; cin >> massDel;
+		
+		switch (massDel)
+		{
+		case 1:
+			cout << "\nВведите позицию которую хотите удалить:"; int posDel; cin >> posDel;
+			delArrayIndex(array, length, posDel);
+			printArray(array, length);
+			break;
+		case 2:
+			cout << "\nВведите значение которое хотите удалить:"; int valueDel; cin >> valueDel;
+		default:
+			system("cls");
+			exit(1);
+		}
+	case 4:
+		cout << "\nВведите 1 чтобы пропустить:"; cin >> exitFromUser;
+		if (exitFromUser == 1)
+			break;
+		cout << "Сортировка массива 1 - по убыванию. 2 - по возрастанию:"; short arraySort; cin >> arraySort;
+		switch (arraySort)
+		{
+		case 1:
+
+		case 2:
+			sort(array, array + length);
+			printArray(array, length);
+		default:
+			system("cls");
+			exit(1);
+		}
+	default:
+		system("cls");
+		exit(1);
+	}
+
 }
